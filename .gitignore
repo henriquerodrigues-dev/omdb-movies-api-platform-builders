@@ -4,27 +4,15 @@ __pycache__/
 *$py.class
 
 # Environment
+.env
 venv/
-env/
-.venv/
+.env.*
 
-# VSCode
+# IDEs and editors
 .vscode/
+.idea/
+*.swp
+*~
 
 # Database
 *.db
-
-# Logs
-*.log
-
-# Editor swap files
-*.swp
-*.swo
-
-# macOS
-.DS_Store
-
-# Python packaging
-*.egg-info/
-dist/
-build/
