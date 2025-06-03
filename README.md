@@ -62,7 +62,7 @@ OMDB_API_KEY=your_api_key_here
 
 5. Rode a aplicação:
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 > A API estará disponível em: http://localhost:8000 ou http://localhost:8000/docs
 
