@@ -1,12 +1,13 @@
-// JS atualizado para lista de filmes mais organizada e cores do Swagger FastAPI
 const apiBase = "/api/movies";
 
+// Mostrar mensagens de sucesso/erro
 function showResult(elementId, data, isError = false) {
   const el = document.getElementById(elementId);
   el.textContent = JSON.stringify(data, null, 2);
   el.className = isError ? "error" : "success";
 }
 
+// Renderiza lista organizada de filmes com botão deletar
 function renderMovieList(movies) {
   const container = document.getElementById("getAllResult");
   if (!movies || movies.length === 0) {
@@ -30,9 +31,21 @@ function renderMovieList(movies) {
     plot.className = "movie-plot";
     plot.textContent = movie.plot;
 
+    // Botão deletar
+    const btnDelete = document.createElement("button");
+    btnDelete.className = "btn-delete";
+    btnDelete.title = `Excluir filme "${movie.title}"`;
+    btnDelete.innerHTML = "🗑️";
+    btnDelete.onclick = () => {
+      if (confirm(`Tem certeza que deseja excluir o filme "${movie.title}"?`)) {
+        deleteMovie(movie.id);
+      }
+    };
+
     li.appendChild(title);
     li.appendChild(info);
     li.appendChild(plot);
+    li.appendChild(btnDelete);
 
     ul.appendChild(li);
   });
@@ -41,6 +54,39 @@ function renderMovieList(movies) {
   container.appendChild(ul);
 }
 
+// Renderiza um único filme no estilo da lista, usado para busca por ID
+function renderSingleMovie(movie) {
+  const container = document.getElementById("getByIdResult");
+  if (!movie) {
+    container.innerHTML = "<p>Filme não encontrado.</p>";
+    return;
+  }
+
+  const ul = document.createElement("ul");
+  const li = document.createElement("li");
+
+  const title = document.createElement("div");
+  title.textContent = movie.title;
+  title.className = "movie-title";
+
+  const info = document.createElement("div");
+  info.className = "movie-info";
+  info.textContent = `Ano: ${movie.year} | Diretor: ${movie.director} | IMDb: ${movie.imdb_rating}`;
+
+  const plot = document.createElement("div");
+  plot.className = "movie-plot";
+  plot.textContent = movie.plot;
+
+  li.appendChild(title);
+  li.appendChild(info);
+  li.appendChild(plot);
+  ul.appendChild(li);
+
+  container.innerHTML = "";
+  container.appendChild(ul);
+}
+
+// Cadastrar novo filme (POST /api/movies)
 async function addMovie() {
   const titleInput = document.getElementById("titleInput");
   const title = titleInput.value.trim();
@@ -71,6 +117,7 @@ async function addMovie() {
   }
 }
 
+// Listar todos os filmes (GET /api/movies)
 async function fetchMovies() {
   try {
     const res = await fetch(apiBase);
@@ -86,12 +133,14 @@ async function fetchMovies() {
   }
 }
 
+// Buscar filme por ID (GET /api/movies/{id})
 async function getMovieById() {
   const idInput = document.getElementById("movieIdInput");
   const id = idInput.value.trim();
 
-  if (!id || isNaN(id) || Number(id) <= 0) {
-    showResult("getByIdResult", { error: "Por favor, insira um ID válido (número maior que zero)." }, true);
+  if (!id) {
+    const container = document.getElementById("getByIdResult");
+    container.innerHTML = "<p>Por favor, insira um ID válido.</p>";
     return;
   }
 
@@ -100,15 +149,32 @@ async function getMovieById() {
     const data = await res.json();
 
     if (!res.ok) {
-      showResult("getByIdResult", data, true);
+      const container = document.getElementById("getByIdResult");
+      container.innerHTML = `<p>Erro: ${data.detail || "Filme não encontrado."}</p>`;
     } else {
-      showResult("getByIdResult", data);
+      renderSingleMovie(data);
     }
   } catch (error) {
-    showResult("getByIdResult", { error: error.message }, true);
+    const container = document.getElementById("getByIdResult");
+    container.innerHTML = `<p>Erro: ${error.message}</p>`;
   }
 }
 
-window.addMovie = addMovie;
-window.fetchMovies = fetchMovies;
-window.getMovieById = getMovieById;
+// Deletar filme (DELETE /api/movies/{id})
+async function deleteMovie(id) {
+  try {
+    const res = await fetch(`${apiBase}/${id}`, {
+      method: "DELETE",
+    });
+
+    if (res.status === 204) {
+      alert("Filme excluído com sucesso! 🗑️");
+      fetchMovies(); // Atualiza lista
+    } else {
+      const data = await res.json();
+      alert(`Erro ao excluir: ${data.detail || "Erro desconhecido."}`);
+    }
+  } catch (error) {
+    alert(`Erro ao excluir: ${error.message}`);
+  }
+}

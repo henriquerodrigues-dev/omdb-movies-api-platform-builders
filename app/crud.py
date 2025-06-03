@@ -43,3 +43,12 @@ def get_movie(id: int, db: Session = Depends(get_db)):
 @router.get("/movies", response_model=list[schemas.MovieOut])
 def list_movies(db: Session = Depends(get_db)):
     return db.query(models.Movie).all()
+
+@router.delete("/movies/{id}", status_code=204)
+def delete_movie(id: int, db: Session = Depends(get_db)):
+    movie = db.query(models.Movie).get(id)
+    if not movie:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    db.delete(movie)
+    db.commit()
+    return

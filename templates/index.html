@@ -79,7 +79,7 @@
     }
 
     /* Lista organizada para filmes */
-    #getAllResult {
+    #getAllResult, #getByIdResult {
       padding: 0;
       max-height: 350px;
       overflow-y: auto;
@@ -87,23 +87,25 @@
       border-radius: 6px;
       border: 1px solid #cbd5e1;
     }
-    #getAllResult ul {
+    #getAllResult ul, #getByIdResult ul {
       list-style-type: none;
       padding-left: 1rem;
       margin: 0;
     }
-    #getAllResult li {
+    #getAllResult li, #getByIdResult li {
       margin-bottom: 15px;
       border-bottom: 1px solid #dae1e7;
       padding-bottom: 10px;
+      position: relative;
     }
-    #getAllResult li:last-child {
+    #getAllResult li:last-child, #getByIdResult li:last-child {
       border-bottom: none;
     }
     .movie-title {
       font-weight: 700;
       font-size: 1.1rem;
       color: #1f2937; /* cinza escuro */
+      display: inline-block;
     }
     .movie-info {
       font-size: 0.9rem;
@@ -115,10 +117,25 @@
       font-style: italic;
       color: #6b7280; /* cinza claro */
     }
+    /* Botão lixeira */
+    .btn-delete {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: #d32f2f;
+      transition: color 0.3s;
+    }
+    .btn-delete:hover {
+      color: #9b1c1c;
+    }
   </style>
 </head>
 <body>
-  <h1>🎬 OMDb Movies API – Teste Rápido</h1>
+  <h1>🎬 OMDb Movies API – Platform Builders</h1>
 
   <section>
     <h2>1. 🎥 Cadastrar Filme</h2>
@@ -137,7 +154,7 @@
     <h2>3. 🔍 Buscar Filme por ID</h2>
     <input type="number" id="movieIdInput" placeholder="Ex: 1" min="1" />
     <button onclick="getMovieById()">🔎 Buscar</button>
-    <pre id="getByIdResult"></pre>
+    <div id="getByIdResult"></div>
   </section>
 
   <section>
