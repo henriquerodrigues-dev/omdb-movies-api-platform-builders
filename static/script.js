@@ -1,37 +1,43 @@
+// Base da URL da API para manipulação dos filmes
 const apiBase = "/api/movies";
 
-// Mostrar mensagens de sucesso/erro
+// Função para mostrar mensagens de sucesso ou erro em elementos HTML
 function showResult(elementId, data, isError = false) {
   const el = document.getElementById(elementId);
-  el.textContent = JSON.stringify(data, null, 2);
-  el.className = isError ? "error" : "success";
+  el.textContent = JSON.stringify(data, null, 2);  // Formata JSON legível
+  el.className = isError ? "error" : "success";    // Define estilo visual
 }
 
-// Renderiza lista organizada de filmes com botão deletar
+// Renderiza uma lista organizada de filmes com informações e botão para deletar
 function renderMovieList(movies) {
   const container = document.getElementById("getAllResult");
+
   if (!movies || movies.length === 0) {
     container.innerHTML = "<p>Nenhum filme cadastrado ainda.</p>";
     return;
   }
 
   const ul = document.createElement("ul");
+
   movies.forEach((movie) => {
     const li = document.createElement("li");
 
+    // Título do filme em destaque
     const title = document.createElement("div");
     title.textContent = movie.title;
     title.className = "movie-title";
 
+    // Informações adicionais: ano, diretor e avaliação IMDb
     const info = document.createElement("div");
     info.className = "movie-info";
     info.textContent = `Ano: ${movie.year} | Diretor: ${movie.director} | IMDb: ${movie.imdb_rating}`;
 
+    // Sinopse do filme
     const plot = document.createElement("div");
     plot.className = "movie-plot";
     plot.textContent = movie.plot;
 
-    // Botão deletar
+    // Botão para deletar o filme com confirmação
     const btnDelete = document.createElement("button");
     btnDelete.className = "btn-delete";
     btnDelete.title = `Excluir filme "${movie.title}"`;
@@ -42,6 +48,7 @@ function renderMovieList(movies) {
       }
     };
 
+    // Adiciona elementos ao item da lista
     li.appendChild(title);
     li.appendChild(info);
     li.appendChild(plot);
@@ -50,13 +57,15 @@ function renderMovieList(movies) {
     ul.appendChild(li);
   });
 
+  // Limpa o container e adiciona a lista montada
   container.innerHTML = "";
   container.appendChild(ul);
 }
 
-// Renderiza um único filme no estilo da lista, usado para busca por ID
+// Renderiza um único filme no mesmo estilo da lista, usado para busca por ID
 function renderSingleMovie(movie) {
   const container = document.getElementById("getByIdResult");
+
   if (!movie) {
     container.innerHTML = "<p>Filme não encontrado.</p>";
     return;
@@ -86,7 +95,7 @@ function renderSingleMovie(movie) {
   container.appendChild(ul);
 }
 
-// Cadastrar novo filme (POST /api/movies)
+// Função para adicionar um novo filme via requisição POST
 async function addMovie() {
   const titleInput = document.getElementById("titleInput");
   const title = titleInput.value.trim();
@@ -109,15 +118,15 @@ async function addMovie() {
       showResult("postResult", data, true);
     } else {
       showResult("postResult", { message: `Filme "${data.title}" cadastrado com sucesso! 🎉`, data }, false);
-      titleInput.value = "";
-      fetchMovies();
+      titleInput.value = "";  // Limpa o campo após sucesso
+      fetchMovies();          // Atualiza a lista de filmes
     }
   } catch (error) {
     showResult("postResult", { error: error.message }, true);
   }
 }
 
-// Listar todos os filmes (GET /api/movies)
+// Função para buscar e listar todos os filmes via GET
 async function fetchMovies() {
   try {
     const res = await fetch(apiBase);
@@ -133,7 +142,7 @@ async function fetchMovies() {
   }
 }
 
-// Buscar filme por ID (GET /api/movies/{id})
+// Busca filme pelo ID informado e exibe os detalhes
 async function getMovieById() {
   const idInput = document.getElementById("movieIdInput");
   const id = idInput.value.trim();
@@ -160,7 +169,7 @@ async function getMovieById() {
   }
 }
 
-// Deletar filme (DELETE /api/movies/{id})
+// Deleta filme pelo ID e atualiza a lista após sucesso
 async function deleteMovie(id) {
   try {
     const res = await fetch(`${apiBase}/${id}`, {
@@ -169,7 +178,7 @@ async function deleteMovie(id) {
 
     if (res.status === 204) {
       alert("Filme excluído com sucesso! 🗑️");
-      fetchMovies(); // Atualiza lista
+      fetchMovies(); // Atualiza lista após exclusão
     } else {
       const data = await res.json();
       alert(`Erro ao excluir: ${data.detail || "Erro desconhecido."}`);

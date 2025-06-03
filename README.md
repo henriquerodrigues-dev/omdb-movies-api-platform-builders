@@ -1,8 +1,6 @@
-# README.md
+# omdb-movies-api-platform-builders 🚀🎬
 
-# omdb-movies-api-plataform-builders 🚀🎬
-
-> Projeto desenvolvido como teste técnico para a vaga de **Desenvolvedor(a) Python** na empresa **[\[Plataform Builders\]](https://www.platformbuilders.io/)**.
+> Projeto desenvolvido como teste técnico para a vaga de **Desenvolvedor(a) Python** na empresa [Platform Builders](https://www.platformbuilders.io/).
 
 API REST assíncrona em Python com FastAPI para cadastro e consulta de filmes,  
 com dados complementares obtidos da API externa OMDb.  
@@ -57,7 +55,7 @@ pip install -r requirements.txt
 ```
 
 4. Crie o arquivo .env na raiz do projeto com o conteúdo:
-```bash
+```
 OMDB_API_KEY=your_api_key_here
 ```
 > (Substitua o valor '**your_api_key_here**' pela sua chave OMDb obtida no site)
