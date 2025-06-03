@@ -40,7 +40,7 @@ Desenvolver uma API com três endpoints para:
 
 ```bash
 git clone https://github.com/henriquerodrigues-dev/omdb-movies-api-platform-builders
-cd omdb-movies-api
+cd omdb-movies-api-platform-builders
 ```
 
 2. Crie e ative seu ambiente virtual:
